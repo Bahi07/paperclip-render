@@ -30,5 +30,5 @@ ENV NODE_ENV=production \
 
 EXPOSE 3100
 
-# Start script: ensure config.json exists using dynamic PORT and DATABASE_URL, verify Hermes, then run Paperclip
-CMD ["sh", "-c", "mkdir -p /paperclip/instances/default && echo '{"server":{"host":"0.0.0.0","port":'${PORT:-3100}'},"database":{"url":"'$DATABASE_URL'"}}' > /paperclip/instances/default/config.json && hermes --version && paperclipai run --yes"]
+# Start script: ensure config.json exists using dynamic PORT and DATABASE_URL, then run Paperclip
+CMD ["sh", "-c", "mkdir -p /paperclip/instances/default && echo '{"server":{"host":"0.0.0.0","port":'${PORT:-3100}'},"database":{"url":"'$DATABASE_URL'"}}' > /paperclip/instances/default/config.json && echo "Config written:" && cat /paperclip/instances/default/config.json && paperclipai run --yes"]
