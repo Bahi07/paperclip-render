@@ -1,5 +1,4 @@
 # Paperclip + Hermes Agent — Lightweight image for Render free tier
-# Uses npm package instead of building from source (saves RAM + time)
 FROM node:20-slim
 
 # Install system dependencies + Python for Hermes Agent CLI
@@ -13,7 +12,7 @@ RUN apt-get update \
 # Install Paperclip CLI globally (pre-built npm package)
 RUN npm install -g paperclipai@latest
 
-# Create Paperclip home directories
+# Create directories for Paperclip
 RUN mkdir -p /paperclip/instances/default
 
 # Environment variables
@@ -31,8 +30,5 @@ ENV NODE_ENV=production \
 
 EXPOSE 3100
 
-# Start script
-COPY render-start.sh /render-start.sh
-RUN chmod +x /render-start.sh
-
-CMD ["/render-start.sh"]
+# Start script: ensure config exists, then run Paperclip
+CMD ["sh", "-c", "mkdir -p /paperclip/instances/default && if [ ! -f /paperclip/instances/default/config.json ]; then paperclipai onboard --yes --bind lan; fi && paperclipai run --yes"]
