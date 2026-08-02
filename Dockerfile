@@ -15,11 +15,10 @@ RUN npm install -g paperclipai@latest
 # Create directories for Paperclip
 RUN mkdir -p /paperclip/instances/default
 
-# Environment variables
+# Environment variables - use Render's dynamic PORT
 ENV NODE_ENV=production \
     HOME=/paperclip \
     HOST=0.0.0.0 \
-    PORT=3100 \
     SERVE_UI=true \
     PAPERCLIP_HOME=/paperclip \
     PAPERCLIP_INSTANCE_ID=default \
@@ -30,5 +29,5 @@ ENV NODE_ENV=production \
 
 EXPOSE 3100
 
-# Start script: ensure config.json exists using dynamic PORT and DATABASE_URL, then run Paperclip
-CMD ["sh", "-c", "mkdir -p /paperclip/instances/default && echo '{"server":{"host":"0.0.0.0","port":'${PORT:-3100}'},"database":{"url":"'$DATABASE_URL'"}}' > /paperclip/instances/default/config.json && echo "Config written:" && cat /paperclip/instances/default/config.json && paperclipai run --yes"]
+# Start script: use Render's $PORT, create config, then run Paperclip
+CMD ["sh", "-c", "mkdir -p /paperclip/instances/default && echo '{"server":{"host":"0.0.0.0","port":'${PORT:-10000}'},"database":{"url":"'$DATABASE_URL'"}}' > /paperclip/instances/default/config.json && echo 'Config: ' && cat /paperclip/instances/default/config.json && paperclipai run --yes"]
